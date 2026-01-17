@@ -22,10 +22,10 @@ const Home = () => {
       <section className="flex flex-col items-center text-white text-sm pb-20 px-4 font-poppins">
           
 
-        <a href="https://prebuiltui.com" className="flex items-center gap-2 border border-slate-700 rounded-full p-1 pr-3 text-sm mt-20">
+        <a href="http://localhost:5173/pricing" className="flex items-center gap-2 border border-slate-700 rounded-full p-1 pr-3 text-sm mt-20">
           <span className="bg-indigo-600 text-xs px-3 py-1 rounded-full">NEW</span>
           <p className="flex items-center gap-2">
-            <span>Try 30 days free trial option</span>
+            <span>Explore our pricing</span>
             <svg className="mt-px" width="6" height="9" viewBox="0 0 6 9" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m1 1 4 3.5L1 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </p>
         </a>
