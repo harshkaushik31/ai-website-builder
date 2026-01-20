@@ -1,7 +1,7 @@
-import { BotIcon, EyeIcon, UserIcon } from "lucide-react"
+import { BotIcon, EyeIcon, Loader2Icon, SendIcon, UserIcon } from "lucide-react"
 import type { Message, Project, Version } from "../types"
 import { Link } from "react-router-dom"
-import { useRef, useEffect } from "react"
+import { useRef, useEffect, useState } from "react"
 
 interface SidebarProps {
     isMenuOpen: boolean,
@@ -14,6 +14,7 @@ interface SidebarProps {
 const Sidebar = ({isMenuOpen, project, setProject, isGenerating, setIsGenerating} : SidebarProps) => {
 
     const messageRef = useRef<HTMLDivElement>(null);
+    const [input, setInput] = useState('');
 
     const handleRollBack = async (versionId : string) => {
 
@@ -104,7 +105,17 @@ Roll back to this version
                 <div ref={messageRef}/>
             </div>
             {/* Input Area */}
-            <form ></form>
+            <form className="m-3 relative" >
+                <div className="flex items-center gap-2">
+                    <textarea  onChange={(e)=>setInput(e.target.value)} rows={4} placeholder="Describe your website or request changes..." className="flex-1 p-3 rounded-xl resize-none text-sm outline-none ring ring-gray-700 focus:ring-indigo-500 bg-gray-800 text-gray-100 placeholder-gray-400 transition-all" disabled={isGenerating}/>
+                    <button>
+                        {
+                            isGenerating ? <Loader2Icon className="size-7 p-1.5 animate-spin text-white"/> : 
+                            <SendIcon className="size-7 text-white p-1.5"/>
+                        }
+                    </button>
+                </div>
+            </form>
         </div>
         
     </div>
