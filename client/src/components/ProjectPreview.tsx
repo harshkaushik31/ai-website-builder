@@ -10,7 +10,7 @@ interface ProjectPreviewProps {
   project: Project,
   isGenerating: boolean,
   device: 'phone' | 'tablet' | 'desktop',
-  showEditorPanel: boolean
+  showEditorPanel?: boolean
 }
 
 
