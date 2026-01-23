@@ -1,6 +1,7 @@
-import { forwardRef, useRef } from "react"
+import { forwardRef, useEffect, useRef, useState } from "react"
 import type { Project } from "../types"
 import { iframeScript } from "../assets/assets";
+import EditorPane from "./EditorPane";
 
 export interface ProjectPreviewRef {
   getCode: () => string | undefined,
@@ -18,10 +19,33 @@ const ProjectPreview = forwardRef<ProjectPreviewRef, ProjectPreviewProps>(({proj
 
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
+  const [selectedElement, setSelectedElement] = useState<any>();
+
   const resolutions = {
     phone: 'w-[412px]',
     tablet: 'w-[786px]',
     desktop: 'w-full' 
+  }
+
+  useEffect(()=>{
+    const handleMessage = (event: MessageEvent) => {
+      if(event.data.type === 'ELEMENT_SELECTED'){
+        setSelectedElement(event.data.payload)
+      }else if(event.data.type === 'CLEAR_SELECTION'){
+        setSelectedElement(null)
+      }
+    }
+    window.addEventListener('message',handleMessage)
+    return ()=> window.removeEventListener('message', handleMessage)
+  },[])
+
+  const handleUpdate = (updates: any) => {
+    if(iframeRef.current?.contentWindow){
+      iframeRef.current.contentWindow.postMessage({
+        type: 'UPDATE_ELEMENT',
+        payload: updates
+      }, '*')
+    }
   }
 
   const injectPreview = (html: string)=> {
@@ -45,6 +69,18 @@ const ProjectPreview = forwardRef<ProjectPreviewRef, ProjectPreviewProps>(({proj
               srcDoc={injectPreview(project.current_code)}
               className={`h-full max-w:full ${resolutions[device]} mx-auto transition-all`}
             />
+            {
+              showEditorPanel && selectedElement && (
+                <EditorPane selectedElement={selectedElement}
+                onUpdate={handleUpdate}
+                onClose={()=>{
+                  setSelectedElement(null);
+                  if(iframeRef.current?.contentWindow){
+                    iframeRef.current.contentWindow.postMessage({type: 'CLEAT_SELECTION_REQUEST'},'*')
+                  }
+                }}/>
+              )
+            }
           </>
         ) : isGenerating && (
           <div>
